@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="green">#7fffd4</color>
+     <color name="colorPrinmaryVariant" >#FFFFFFFF</color>
+    <color name="cornsilk">#fff8dc</color> <!-- 米绸色 -->
+    <color name="gray">#919393</color>
+
+</resources>

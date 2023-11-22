@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    style="?attr/materialCardViewFilledStyle"
+    android:layout_marginStart="@dimen/view_margin_small_spacing"
+    android:layout_marginEnd="@dimen/view_margin_small_spacing"
+    android:layout_marginBottom="@dimen/view_margin_small_spacing"
+    android:backgroundTint="@color/white"
+    app:cardElevation="2dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="@dimen/view_margin_normal_spacing">
+
+            <ImageView
+                android:id="@+id/user_avatar"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:src="@drawable/username" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/view_margin_small_spacing"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="27dp"
+                    android:textSize="@dimen/front_normal_size"
+                    android:text="@string/item_username"></TextView>
+
+                <TextView
+                    android:id="@+id/slogan"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/view_margin_small_spacing"
+                    android:ellipsize="end"
+                    android:maxLength="16"
+                    android:text="@string/item_slogan"></TextView>
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/create_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:textColor="@color/gray"
+                android:textSize="@dimen/front_small_size"
+                android:text="@string/item_time"></TextView>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/cover"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/diary_normal"></ImageView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/view_margin_normal_spacing"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/view_margin_large_spacing"
+                android:textColor="@color/black"
+                android:text="@string/item_title"></TextView>
+
+            <TextView
+                android:id="@+id/content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/gray"
+                android:layout_marginTop="@dimen/view_margin_normal_spacing"
+                android:text="@string/item_content"></TextView>
+
+            <Button
+                android:id="@+id/delete"
+                style="@style/Widget.Material3.Button.IconButton.Filled"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:layout_marginTop="@dimen/view_margin_normal_spacing"
+                android:text="@string/item_delete"
+                app:icon="@drawable/delete_icon"></Button>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
