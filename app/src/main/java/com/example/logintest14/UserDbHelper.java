@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import androidx.annotation.Nullable;
 
 public class UserDbHelper extends SQLiteOpenHelper {
+    private User user;
     private static UserDbHelper sHelper;
     private static final String DB_NAME = "user.db";   //数据库名
     private static final int VERSION = 1;    //版本号

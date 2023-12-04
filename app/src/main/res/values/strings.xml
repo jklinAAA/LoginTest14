@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Z一吾日记</string>
+    <string name="app_name">星空日记</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="Description">Description</string>
@@ -7,11 +7,15 @@
     <string name="title_note">Diary\n\n</string>
     <string name="item_username">Username\n\n</string>
     <string name="item_slogan">This is my slogan @!!!</string>
-    <string name="item_time">2023-12-10 14:32</string>
+    <string name="item_time">2023-12-10 00:00 </string>
     <string name="item_title">Title\n</string>
     <string name="item_content">ContentContentContentContentContentContentContentContentContentContentContentContentContentContentContentContentContentContentContentContentContentContentContent</string>
     <string name="item_delete">Delete</string>
-    <string name="noteLength">%d words</string>
-    <string name="noteTitle">Title\n</string>
-    <string name="noteContent">Content\n</string>
+    <string name="note_length">%d words</string>
+    <string name="note_title">Title\n</string>
+    <string name="note_content">Content\n</string>
+    <string name="no_note">There is nothing!</string>
+    <string name="Username">Username\n</string>
+    <string name="password">Password\n</string>
+    <string name="search_hint">Serch for diary\n</string>
 </resources>

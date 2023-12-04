@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/diary"
-        android:title="日记"
-        android:icon="@drawable/diary_pass"></item>
+        android:title="DIRAY"
+        android:icon="@drawable/note"></item>
     <item android:id="@+id/mark"
-        android:title="痕迹"
-        android:icon="@drawable/mark_pass"></item>
+        android:title="CHAT"
+        android:icon="@drawable/talk"></item>
     <item android:id="@+id/mine"
-    android:title="我的"
+    android:title="PROFILE"
     android:icon="@drawable/mine"></item>
 </menu>

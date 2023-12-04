@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "t_note")    //()表的名字
 public class EntityNote {
     @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "note_id")
     long noteId;
     @ColumnInfo(name = "note_user_id")
     long noteUserId; //note 里用户的id
@@ -18,14 +19,28 @@ public class EntityNote {
     String noteImageUrl; //图片
     @ColumnInfo(name = "create_time")
     String createTime;
+    @ColumnInfo(name = "weather")  // 天气字段
+    String weather;
+    @ColumnInfo(name = "mood")  // 心情字段
+    String mood;
+    @ColumnInfo(name = "selectTime")  // 心情字段
+    String selectTime;
+
+
+
 
     //不用构造id  他是自增的
-    public EntityNote(long noteUserId, String noteTitle, String noteContent, String noteImageUrl, String createTime) {
+    public EntityNote(long noteUserId, String noteTitle, String noteContent, String noteImageUrl, String createTime, String weather, String mood,String selectTime) {
         this.noteUserId = noteUserId;
         this.noteTitle = noteTitle;
         this.noteContent = noteContent;
         this.noteImageUrl = noteImageUrl;
         this.createTime = createTime;
+        this.weather = weather;
+        this.mood = mood;
+        this.selectTime = selectTime;
+
+
     }
 
     public long getNoteId() {
@@ -75,6 +90,29 @@ public class EntityNote {
     public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
+    public String getWeather() {
+        return weather;
+    }
+
+    public void setWeather(String weather) {
+        this.weather = weather;
+    }
+
+    public String getMood() {
+        return mood;
+    }
+
+    public void setMood(String mood) {
+        this.mood = mood;
+    }
+
+    public String getSelectTime() {
+        return selectTime;
+    }
+
+    public void setSelectTime(String selectTime) {
+        this.selectTime = selectTime;
+    }
 
     @Override
     public String toString() {
@@ -85,6 +123,9 @@ public class EntityNote {
                 ", noteContent='" + noteContent + '\'' +
                 ", noteImageUrl='" + noteImageUrl + '\'' +
                 ", createTime='" + createTime + '\'' +
+                ", weather='" + weather + '\'' +
+                ", mood='" + mood + '\'' +
+                ", selectTime='" + selectTime + '\'' +
                 '}';
     }
 }

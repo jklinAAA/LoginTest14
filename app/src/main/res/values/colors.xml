@@ -6,5 +6,6 @@
      <color name="colorPrinmaryVariant" >#FFFFFFFF</color>
     <color name="cornsilk">#fff8dc</color> <!-- 米绸色 -->
     <color name="gray">#919393</color>
+    <color name="trans">#00FFFFFF</color>
 
 </resources>

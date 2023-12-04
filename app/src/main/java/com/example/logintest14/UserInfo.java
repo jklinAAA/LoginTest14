@@ -1,11 +1,22 @@
 package com.example.logintest14;
 
+import android.net.Uri;
+
+
 public class UserInfo {
+
+
+    private Uri avatarUri;
+    private User user;
     private static UserInfo userInfo;
     private int user_id;
     private String username;
     private String password;
     private String nickname;
+
+    public UserInfo(Uri avatarUri) {
+        this.avatarUri = avatarUri;
+    }
 
     public UserInfo(int user_id, String username, String password, String nickname) {
         this.user_id = user_id;           //构造方法
@@ -13,7 +24,13 @@ public class UserInfo {
         this.password = password;
         this.nickname = nickname;
     }
+    public Uri getAvatarUri() {
+        return avatarUri;
+    }
 
+    public void setAvatarUri(Uri avatarUri) {
+        this.avatarUri = avatarUri;
+    }
     public static UserInfo getUserInfo() {
         return userInfo;
     }

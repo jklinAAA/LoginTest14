@@ -9,8 +9,17 @@ public class EntityNoteCard {
     String title;
     String content;
     String createTime;
+    String weather;
+    String mood;
+    String selectTime;
 
-    public EntityNoteCard(long noteCardId, String username, String slogan, String userAvatar, String cover, String title, String content, String createTime) {
+
+    public EntityNoteCard() {
+    }
+
+
+
+    public EntityNoteCard(long noteCardId, String username, String slogan, String userAvatar, String cover, String title, String content, String createTime,String weather, String mood) {
         this.noteCardId = noteCardId;
         this.username = username;
         this.slogan = slogan;
@@ -19,6 +28,10 @@ public class EntityNoteCard {
         this.title = title;
         this.content = content;
         this.createTime = createTime;
+        this.weather = weather;
+        this.mood = mood;
+
+
     }
 
     public String getCreateTime() {
@@ -85,6 +98,22 @@ public class EntityNoteCard {
         this.content = content;
     }
 
+    public String getWeather() {
+        return weather;
+    }
+
+    public void setWeather(String weather) {
+        this.weather = weather;
+    }
+
+    public String getMood() {
+        return mood;
+    }
+
+    public void setMood(String mood) {
+        this.mood = mood;
+    }
+
     @Override
     public String toString() {
         return "EntityNoteCard{" +
@@ -95,6 +124,8 @@ public class EntityNoteCard {
                 ", cover='" + cover + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
+                ", weather='" + weather + '\'' +
+                ", mood='" + mood + '\'' +
                 '}';
     }
 }

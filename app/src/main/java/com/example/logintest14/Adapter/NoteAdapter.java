@@ -1,6 +1,8 @@
 package com.example.logintest14.Adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,46 +13,123 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.example.logintest14.Dao.NoteDao;
 import com.example.logintest14.Entity.EntityNoteCard;
+import com.example.logintest14.InitDataBase.InitDataBase;
 import com.example.logintest14.R;
+import com.example.logintest14.Util.UtilMethod;
+import com.example.logintest14.fragment.NotePager.AddOrEditNoteActivity;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
+import java.util.List;               //新增  查询
 
-public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder>{
-    ArrayList<EntityNoteCard> list;  //列表
-    Context context ; //上下文
+public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
+    private ArrayList<EntityNoteCard> originalList;  // 初始列表
+    private ArrayList<EntityNoteCard> filteredList;  // 过滤后的列表
+    private Context context; //上下文
+    private  int deletePosition;   //成员变量，删除的位置
+    //删除数据库里的内容 需要
+    private InitDataBase initDataBase;
+    private NoteDao noteDao;
+    //更新日记的数量
+    private  CountListen countListen;
+    private String query = ""; // 查询条件
 
-    public NoteAdapter(ArrayList<EntityNoteCard> list, Context context) {
-        this.list = list;
+    public NoteAdapter(ArrayList<EntityNoteCard> list, Context context, CountListen countListen) {
+        this.originalList = list;
+        this.filteredList = new ArrayList<>(list);
         this.context = context;
+        this.countListen = countListen;
+        initDataBase = UtilMethod.getInstance(context); //初始化
+        noteDao = initDataBase.noteDao();
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {  //创建一个ViewHolder 并返回   //视图绑定
-        View view = LayoutInflater.from(context).inflate(R.layout.item_note,parent,false);
+        View view = LayoutInflater.from(context).inflate(R.layout.item_note, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull NoteAdapter.ViewHolder holder, int position) {
-        holder.username.setText(list.get(position).getUsername());   //holder.username 拿到username控件
-       // holder.username.setText(list.get(position).getUsername());
-        holder.slogan.setText(list.get(position).getSlogan());
-        holder.createTime.setText(list.get(position).getCreateTime());
-        holder.title.setText(list.get(position).getTitle());
-        holder.content.setText(list.get(position).getContent());
-        //点击事件
-        holder.delete.setOnClickListener(v -> System.out.println("delete is running!!!"));
+        if (position == holder.getLayoutPosition()) {
+            EntityNoteCard noteCard = filteredList.get(position);
+            holder.username.setText(noteCard.getUsername());   //holder.username 拿到username控件
+            // holder.username.setText(list.get(position).getUsername());
+            holder.slogan.setText(noteCard.getSlogan());
+            holder.createTime.setText(noteCard.getCreateTime());
+            holder.title.setText(noteCard.getTitle());
+            holder.content.setText(noteCard.getContent());
+            Glide.with(context).load(R.drawable.czl).into(holder.userAvatar);
+            //点击事件  删除
+            holder.delete.setOnClickListener(view -> {
+                new MaterialAlertDialogBuilder(context).setTitle("你想要删除这篇日记吗？").setPositiveButton("yes", (dialog, which) -> {
+                    deletePosition = holder.getLayoutPosition();    //传值
+                    deleteNote();
+                }).setNegativeButton("no", null).show();
+            });
+            //修改的点击事件
+            holder.itemCard.setOnClickListener(view -> {
+                Intent intent = new Intent(context, AddOrEditNoteActivity.class);
+                intent.putExtra("isAdd", false);
+                intent.putExtra("noteId", noteCard.getNoteCardId()); //拿到一个CardId
+                context.startActivity(intent);    //AddOrEditNoteActivity 默认是添加 不能直接到
+            });
+        }
     }
+
+    private void deleteNote() {
+        long noteId = filteredList.get(deletePosition).getNoteCardId();
+        noteDao.deleteNoteById(noteId);
+
+        originalList.removeIf(noteCard -> noteCard.getNoteCardId() == noteId);
+        filteredList.remove(deletePosition);
+
+        notifyItemRemoved(deletePosition);
+        notifyItemRangeChanged(deletePosition, filteredList.size());
+
+        countListen.countListen(originalList.size());
+
+    }
+
     @Override
     public int getItemCount() {
+        return filteredList.size();
+    }
+    // 新增方法：设置过滤后的列表
+    public void setFilteredList(ArrayList<EntityNoteCard> filteredList) {
+        this.filteredList = new ArrayList<>(filteredList);
+        notifyDataSetChanged();
+    }
 
-        return list.size();
+    // 新增方法：设置查询条件
+    public void setQuery(String query) {
+        this.query = query;
+        filterNotes(); // 设置查询条件后立即进行列表过滤
+    }
+    // 新增方法：根据查询条件过滤日记列表
+    private void filterNotes() {
+        filteredList.clear();
+        if (query.isEmpty()) {
+            filteredList.addAll(originalList);
+        } else {
+            for (EntityNoteCard noteCard : originalList) {
+                // 根据您的查询条件进行筛选，这里使用标题进行模糊匹配
+                if (noteCard.getTitle().toLowerCase().contains(query.toLowerCase())) {
+                    filteredList.add(noteCard);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 
     //视图绑定  对应那张图片
-    public class ViewHolder extends  RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        MaterialCardView itemCard;
         ImageView userAvatar;
         TextView username;
         TextView slogan;
@@ -58,19 +137,25 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder>{
         ImageView cover;
         TextView title;
         TextView content;
-        Button  delete;
+        Button delete;
+
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
-            userAvatar=itemView.findViewById(R.id.user_avatar);
-            username=itemView.findViewById(R.id.username);
-            slogan=itemView.findViewById(R.id.slogan);
-            createTime=itemView.findViewById(R.id.create_time);
-            cover=itemView.findViewById(R.id.cover);
-            title=itemView.findViewById(R.id.title);
-            content=itemView.findViewById(R.id.content);
-            delete=itemView.findViewById(R.id.delete);
+            itemCard = itemView.findViewById(R.id.item_card);
+            userAvatar = itemView.findViewById(R.id.user_avatar);
+            username = itemView.findViewById(R.id.username);
+            slogan = itemView.findViewById(R.id.slogan);
+            createTime = itemView.findViewById(R.id.create_time);
+            cover = itemView.findViewById(R.id.cover);
+            title = itemView.findViewById(R.id.title);
+            content = itemView.findViewById(R.id.content);
+            delete = itemView.findViewById(R.id.delete);
 
         }
+    }
+
+    public interface CountListen {
+        void countListen(int count);
     }
 }

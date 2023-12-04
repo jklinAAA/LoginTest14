@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:background="@color/green"
         app:subtitleTextColor="@color/black"
-        app:title="我的主页" />
+        app:title="Profile" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -29,8 +29,10 @@
             app:cardCornerRadius="40dp">
 
         <ImageView
+            android:id="@+id/iv_avatar"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:clickable="true"
             android:src="@drawable/qq20231110124608"
             ></ImageView>
             </androidx.cardview.widget.CardView>
@@ -40,20 +42,22 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:orientation="vertical">
-            <TextView
-                android:id="@+id/tv_username"
+            <EditText
+                android:id="@+id/tvUsername"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:textSize="16sp"
                 android:textColor="@color/white"
+                android:clickable="true"
                 android:text="AAAAAA"/>
-            <TextView
-                android:id="@+id/tv_nickname"
+            <EditText
+                android:id="@+id/tvNickname"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/white"
-                android:text="这个人很懒，什么都没留下"
+                android:clickable="true"
+                android:hint="这个人很懒，什么都没留下"
                 android:layout_marginTop="10dp"/>
 
         </androidx.appcompat.widget.LinearLayoutCompat>

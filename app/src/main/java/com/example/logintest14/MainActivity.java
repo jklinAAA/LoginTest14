@@ -31,12 +31,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // room
         // initDataBase = Room.databaseBuilder(getApplicationContext(), InitDataBase.class, "zl_database").build(); //zl_database数据库名字
         initDataBase = UtilMethod.getInstance(getApplicationContext());
         NoteDao noteDao = initDataBase.noteDao();
-        long l = noteDao.insertNote(new EntityNote(1, "title", "content", null, "2023-11"));
+        long l = noteDao.insertNote(new EntityNote(1, "title", "content", null, "2023-12-10","weather","moon","selectTime"));
         System.out.println("insertNoteId" + l);
         System.out.println(noteDao.getAllNote() + "-=-==-=-=-");//+"-=-==-=-=-"方便在log日志找到定位
 

@@ -1,6 +1,4 @@
-package com.example.logintest14.Pager.LoginPager;
-
-import androidx.appcompat.app.AppCompatActivity;
+package com.example.logintest14;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,13 +10,9 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.logintest14.MainActivity;
-import com.example.logintest14.R;
-import com.example.logintest14.RegisterActivity;
-import com.example.logintest14.UserDbHelper;
-import com.example.logintest14.UserInfo;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class LoginActivity extends AppCompatActivity {
+public  class LoginActivity extends AppCompatActivity {
 
     private EditText et_username;
     private EditText et_password;
@@ -31,9 +25,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
-//获取mSharedPreferences实例
+        //获取mSharedPreferences实例
         mSharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
-//初始化控件
+        //初始化控件
         et_username = findViewById(R.id.et_username);
         et_password = findViewById(R.id.et_password);
         checkbox = findViewById(R.id.checkbox);   //初始化控件
@@ -47,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
             checkbox.setChecked(true);
         }
 
-//点击注册
+        //点击注册
         findViewById(R.id.register).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,6 +57,16 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String username = et_username.getText().toString();
                 String password = et_password.getText().toString();
+                                                                                                                  // 输入验证逻辑开始
+                if (!isAlphaNumeric(username)) {
+                    Toast.makeText(LoginActivity.this, "用户名只能包含数字和字母", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!isAlphaNumeric(password)) {
+                    Toast.makeText(LoginActivity.this, "密码只能包含数字和字母", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                                                                                                                  // 输入验证逻辑结束
                 if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
                     Toast.makeText(LoginActivity.this, "请输入用户名或密码", Toast.LENGTH_SHORT).show();
                 } else {
@@ -103,6 +107,9 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
+    }
+    private boolean isAlphaNumeric(String input) {
+        String pattern = "^[a-zA-Z0-9]+$";
+        return input.matches(pattern);
     }
 }
