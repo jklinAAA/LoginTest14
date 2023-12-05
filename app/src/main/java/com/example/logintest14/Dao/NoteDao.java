@@ -54,8 +54,11 @@ public interface NoteDao {
     @Query("SELECT * FROM t_note WHERE weather = :weather AND mood = :mood AND (note_title LIKE '%' || :keyword || '%' OR note_content LIKE '%' || :keyword || '%')")
     List<EntityNote> searchNotes(String keyword, String weather, String mood);
 
+    @Query("UPDATE t_note SET selectTime = :selectTime WHERE note_id = :noteId") //保存选择日期
+    void updateSelectTime(long noteId, String selectTime);
 
-
+    @Query("UPDATE t_note SET note_image_url = :imageUrl WHERE note_id = :noteId")    //保存图片
+    void updateNoteImageUrl(long noteId, String imageUrl);
 
 
 }

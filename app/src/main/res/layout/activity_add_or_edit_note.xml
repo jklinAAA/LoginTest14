@@ -105,11 +105,11 @@
             android:background="@color/gray" />
 
         <EditText
+            android:id="@+id/et_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/et_date"
             android:hint="select date"
-            android:textAlignment="center"/>
+            android:textAlignment="center" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -127,20 +127,19 @@
                     android:backgroundTint="@color/gray"
                     android:hint="@string/note_title" />
 
+                <EditText
+                    android:id="@+id/note_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/gray"
+                    android:hint="@string/note_content" />
+
                 <ImageView
                     android:id="@+id/note_image"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="300dp" />
             </LinearLayout>
-
         </ScrollView>
-
-        <EditText
-            android:id="@+id/note_content"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="@color/gray"
-            android:hint="@string/note_content" />
     </LinearLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

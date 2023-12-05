@@ -27,6 +27,9 @@ public class EntityNote {
     String selectTime;
 
 
+    public EntityNote() {
+        // 空构造函数
+    }
 
 
     //不用构造id  他是自增的

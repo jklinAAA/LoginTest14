@@ -36,7 +36,7 @@
 
 
         <TextView
-            android:id="@+id/note_alter"
+            android:id="@+id/note_alert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/view_margin_small_spacing"

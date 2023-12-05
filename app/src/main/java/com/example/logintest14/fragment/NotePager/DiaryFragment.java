@@ -58,7 +58,7 @@ public class DiaryFragment extends Fragment {
         initList();
         //跳转表达式  加文本
         binding.floatingActionButton.setOnClickListener(view -> {
-            startActivity(new Intent(getActivity(), AddOrEditNoteActivity.class));      //上下文 +要去的地方
+            startActivity(new Intent(getActivity(), AddOrEditNoteActivity.class));     //上下文 +要去的地方
         });
         return binding.getRoot();
 
@@ -76,18 +76,25 @@ public class DiaryFragment extends Fragment {
 
         if (filteredNote != null && filteredNote.size() > 0) {             //需要的是EntityNoteCard实体类 查询是EntityNote实体类  需要把后者转到前者
             ArrayList<EntityNoteCard> list = noteToCard(filteredNote);
+            binding.noNote.setVisibility(View.GONE);
+            binding.noteAlert.setVisibility(View.VISIBLE);                                                                                    //12-5-16.45
             NoteAdapter noteAdapter = new NoteAdapter(list, getContext(), count -> {//内部匿名接口  实现更新日记的数量
-                binding.noteAlter.setText(getString(R.string.note_alter, count + ""));
+                if (count == 0) {
+                    binding.noNote.setVisibility(View.VISIBLE);
+                }
+                binding.noteAlert.setText(getString(R.string.note_alter, count + ""));
             });
-            binding.noteList.setAdapter(noteAdapter);            //渲染
+            binding.noteList.setAdapter(noteAdapter);         //渲染
             binding.noteList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-            binding.noteAlter.setText(getString(R.string.note_alter, list.size() + ""));
+            binding.noteAlert.setText(getString(R.string.note_alter, list.size() + ""));
         } else {
             binding.noNote.setVisibility(View.VISIBLE);
+            binding.noteAlert.setVisibility(View.GONE);                                                                                      //12-5-16.45
         }
     }
 
-    private ArrayList<EntityNoteCard> noteToCard(List<EntityNote> list) {
+
+    private ArrayList<EntityNoteCard> noteToCard(List<EntityNote> list) {                          //如果没有渲染成功考虑以下是不是这里少东西了
         ArrayList<EntityNoteCard> cards = new ArrayList<>();
         for (EntityNote note : list) {                                               //到EntityNoteCard给一个无参构造            public EntityNoteCard() {}
             EntityNoteCard entityNoteCard = new EntityNoteCard();
@@ -98,6 +105,9 @@ public class DiaryFragment extends Fragment {
             entityNoteCard.setCover(note.getNoteImageUrl());
             entityNoteCard.setUsername(getString(R.string.item_username));            //先写死 后面再改成动态
             entityNoteCard.setSlogan(getString(R.string.item_slogan));
+            entityNoteCard.setWeather(note.getWeather());
+            entityNoteCard.setMood(note.getMood());
+            entityNoteCard.setSelectTime(note.getSelectTime());
             cards.add(entityNoteCard);
         }
         return cards;

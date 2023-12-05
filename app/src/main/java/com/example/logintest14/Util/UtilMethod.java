@@ -10,32 +10,65 @@ import androidx.room.Room;
 
 import com.example.logintest14.InitDataBase.InitDataBase;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 public class UtilMethod {
-    public  static InitDataBase baseRoomDatabase;
-    public  static  InitDataBase getInstance(Context context){
-        if (baseRoomDatabase==null){
-            baseRoomDatabase = Room.databaseBuilder(context,InitDataBase.class,"zl_database.db")
+    public static InitDataBase baseRoomDatabase;
+
+    public static InitDataBase getInstance(Context context) {
+        if (baseRoomDatabase == null) {
+            baseRoomDatabase = Room.databaseBuilder(context, InitDataBase.class, "zl_database.db")
 //                    .addAutoMigrationSpec()
                     .allowMainThreadQueries().build();
         }
         return baseRoomDatabase;
     }
-    public  static  void  showToast(Context context ,String info){
+
+    public static void showToast(Context context, String info) {
         Toast.makeText(context, info, Toast.LENGTH_SHORT).show();
     }
 
-    public static String getRealPathFromUri(Context context, Uri uri) {                                   //为了保存图片写的   实现不了就删掉
-        if (uri.getScheme().equals("content")) {
-            String[] projection = {MediaStore.Images.Media.DATA};
-            Cursor cursor = context.getContentResolver().query(uri, projection, null, null, null);
-            if (cursor != null) {
-                int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                cursor.moveToFirst();
-                String path = cursor.getString(column_index);
-                cursor.close();
-                return path;
-            }
+    public static String getPath(Context context, Uri srcUri) {
+        String path = context.getCacheDir() + "/" + System.currentTimeMillis() + ".png";//获取本地目录
+        try {
+            InputStream inputStream = context.getContentResolver().openInputStream(srcUri);//context的方法获取URI文件输入流
+            if (inputStream == null) return "null";
+            File file = new File(path);
+            OutputStream outputStream = new FileOutputStream(file);
+            copyStream(inputStream, outputStream);//调用下面的方法存储
+            inputStream.close();
+            outputStream.close();
+            return path;//成功返回路径
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "null";//失败返回路径null
         }
-        return uri.getPath(); // 如果无法查询到实际路径，则返回 URI 的路径部分
+    }
+
+    private static void copyStream(InputStream input, OutputStream output) {//文件存储
+        final int BUFFER_SIZE = 1024 * 2;
+        byte[] buffer = new byte[BUFFER_SIZE];
+        BufferedInputStream in = new BufferedInputStream(input, BUFFER_SIZE);
+        BufferedOutputStream out = new BufferedOutputStream(output, BUFFER_SIZE);
+        int n;
+        try {
+            while ((n = in.read(buffer, 0, BUFFER_SIZE)) != -1) {
+                out.write(buffer, 0, n);
+            }
+            out.flush();
+            out.close();
+            in.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
+

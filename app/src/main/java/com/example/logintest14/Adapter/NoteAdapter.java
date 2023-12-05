@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.List;               //新增  查询
 
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
+    ArrayList<EntityNoteCard> list;                                                                                  //可删
     private ArrayList<EntityNoteCard> originalList;  // 初始列表
     private ArrayList<EntityNoteCard> filteredList;  // 过滤后的列表
     private Context context; //上下文
@@ -37,6 +38,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     //更新日记的数量
     private  CountListen countListen;
     private String query = ""; // 查询条件
+    private String searchWeather = "";
+    private String searchMood = "";
+
+
 
     public NoteAdapter(ArrayList<EntityNoteCard> list, Context context, CountListen countListen) {
         this.originalList = list;
@@ -56,14 +61,24 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull NoteAdapter.ViewHolder holder, int position) {
+
         if (position == holder.getLayoutPosition()) {
+
             EntityNoteCard noteCard = filteredList.get(position);
-            holder.username.setText(noteCard.getUsername());   //holder.username 拿到username控件
+            holder.username.setText(originalList.get(position).getUsername());   //holder.username 拿到username控件
             // holder.username.setText(list.get(position).getUsername());
-            holder.slogan.setText(noteCard.getSlogan());
-            holder.createTime.setText(noteCard.getCreateTime());
-            holder.title.setText(noteCard.getTitle());
-            holder.content.setText(noteCard.getContent());
+            holder.slogan.setText(originalList.get(position).getSlogan());
+            holder.createTime.setText(originalList.get(position).getCreateTime());
+            holder.title.setText(originalList.get(position).getTitle());
+            holder.content.setText(originalList.get(position).getContent());
+            holder.weatherTextView.setText(originalList.get(position).getWeather());                             //  holder.weatherTextView.setText(noteCard.getWeather());
+            holder.moodTextView.setText(originalList.get(position).getMood());                                   // holder.moodTextView.setText(noteCard.getMood());
+            if (originalList.get(position).getCover() == null) {
+                holder.cover.setVisibility(View.GONE);
+            } else {
+                holder.cover.setVisibility(View.VISIBLE);
+                Glide.with(context).load(originalList.get(position).getCover()).into(holder.cover);
+            }
             Glide.with(context).load(R.drawable.czl).into(holder.userAvatar);
             //点击事件  删除
             holder.delete.setOnClickListener(view -> {
@@ -80,7 +95,10 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
                 context.startActivity(intent);    //AddOrEditNoteActivity 默认是添加 不能直接到
             });
         }
+
     }
+
+
 
     private void deleteNote() {
         long noteId = filteredList.get(deletePosition).getNoteCardId();
@@ -98,8 +116,11 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
+
         return filteredList.size();
     }
+
+
     // 新增方法：设置过滤后的列表
     public void setFilteredList(ArrayList<EntityNoteCard> filteredList) {
         this.filteredList = new ArrayList<>(filteredList);
@@ -109,22 +130,28 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     // 新增方法：设置查询条件
     public void setQuery(String query) {
         this.query = query;
+        this.searchWeather = searchWeather;;
+        this.searchMood = searchMood;;
         filterNotes(); // 设置查询条件后立即进行列表过滤
     }
     // 新增方法：根据查询条件过滤日记列表
     private void filterNotes() {
         filteredList.clear();
-        if (query.isEmpty()) {
+        if (query.isEmpty() && searchWeather.isEmpty() && searchMood.isEmpty()) {
             filteredList.addAll(originalList);
         } else {
             for (EntityNoteCard noteCard : originalList) {
                 // 根据您的查询条件进行筛选，这里使用标题进行模糊匹配
-                if (noteCard.getTitle().toLowerCase().contains(query.toLowerCase())) {
+                if (noteCard.getTitle().toLowerCase().contains(query.toLowerCase()) &&
+                        (searchWeather.isEmpty() || noteCard.getWeather().equalsIgnoreCase(searchWeather)) &&
+                        (searchMood.isEmpty() || noteCard.getMood().equalsIgnoreCase(searchMood))) {
                     filteredList.add(noteCard);
                 }
             }
         }
+
         notifyDataSetChanged();
+
     }
 
     //视图绑定  对应那张图片
@@ -138,6 +165,8 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         TextView title;
         TextView content;
         Button delete;
+        TextView weatherTextView;
+        TextView moodTextView;
 
         public ViewHolder(@NonNull View itemView) {
 
@@ -151,9 +180,12 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             title = itemView.findViewById(R.id.title);
             content = itemView.findViewById(R.id.content);
             delete = itemView.findViewById(R.id.delete);
+            weatherTextView = itemView.findViewById(R.id.weatherTextView);
+            moodTextView = itemView.findViewById(R.id.moodTextView);
 
         }
     }
+
 
     public interface CountListen {
         void countListen(int count);
