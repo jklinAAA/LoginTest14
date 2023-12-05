@@ -31,7 +31,8 @@ public interface NoteDao {
     @Update
     void updateNote(EntityNote note);
     // 添加的代码开始
-    @Query("SELECT * FROM t_note WHERE note_title LIKE '%' || :keyword || '%' OR note_content LIKE '%' || :keyword || '%'")  //搜索
+    @Query("SELECT * FROM t_note WHERE note_title LIKE '%' || :keyword || '%' OR note_content LIKE '%' || :keyword || '%'" +
+            "OR weather LIKE '%' || :keyword || '%'OR mood LIKE '%' || :keyword || '%'")  //搜索
     List<EntityNote> searchNotesByKeyword(String keyword);
     // 添加的代码结束
 
@@ -48,17 +49,13 @@ public interface NoteDao {
 //    @Query("SELECT * FROM t_note WHERE mood = :mood")
 //    List<EntityNote> searchNotesByMood(String mood);
 
-    @Query("SELECT * FROM t_note WHERE weather = :weather OR mood = :mood")
-    List<EntityNote> searchNotesByWeatherOrMood(String weather, String mood);
-
-    @Query("SELECT * FROM t_note WHERE weather = :weather AND mood = :mood AND (note_title LIKE '%' || :keyword || '%' OR note_content LIKE '%' || :keyword || '%')")
-    List<EntityNote> searchNotes(String keyword, String weather, String mood);
-
     @Query("UPDATE t_note SET selectTime = :selectTime WHERE note_id = :noteId") //保存选择日期
     void updateSelectTime(long noteId, String selectTime);
 
     @Query("UPDATE t_note SET note_image_url = :imageUrl WHERE note_id = :noteId")    //保存图片
     void updateNoteImageUrl(long noteId, String imageUrl);
+
+
 
 
 }

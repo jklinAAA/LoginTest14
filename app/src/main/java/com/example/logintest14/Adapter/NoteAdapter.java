@@ -38,8 +38,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     //更新日记的数量
     private  CountListen countListen;
     private String query = ""; // 查询条件
-    private String searchWeather = "";
-    private String searchMood = "";
 
 
 
@@ -130,21 +128,17 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     // 新增方法：设置查询条件
     public void setQuery(String query) {
         this.query = query;
-        this.searchWeather = searchWeather;;
-        this.searchMood = searchMood;;
         filterNotes(); // 设置查询条件后立即进行列表过滤
     }
     // 新增方法：根据查询条件过滤日记列表
     private void filterNotes() {
         filteredList.clear();
-        if (query.isEmpty() && searchWeather.isEmpty() && searchMood.isEmpty()) {
+        if (query.isEmpty()) {
             filteredList.addAll(originalList);
         } else {
             for (EntityNoteCard noteCard : originalList) {
                 // 根据您的查询条件进行筛选，这里使用标题进行模糊匹配
-                if (noteCard.getTitle().toLowerCase().contains(query.toLowerCase()) &&
-                        (searchWeather.isEmpty() || noteCard.getWeather().equalsIgnoreCase(searchWeather)) &&
-                        (searchMood.isEmpty() || noteCard.getMood().equalsIgnoreCase(searchMood))) {
+                if (noteCard.getTitle().toLowerCase().contains(query.toLowerCase())) {
                     filteredList.add(noteCard);
                 }
             }

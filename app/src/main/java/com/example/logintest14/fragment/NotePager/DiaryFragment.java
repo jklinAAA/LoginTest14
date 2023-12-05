@@ -62,6 +62,7 @@ public class DiaryFragment extends Fragment {
         });
         return binding.getRoot();
 
+
     }
 
     private void initList() {
@@ -71,8 +72,11 @@ public class DiaryFragment extends Fragment {
             // 使用搜索关键字进行模糊搜索
             filteredNote = noteDao.searchNotesByKeyword(searchKeyword);
         } else {
-            filteredNote = localNote;
+            filteredNote = localNote;  // 如果搜索关键字为空，则显示所有的笔记
         }
+
+
+
 
         if (filteredNote != null && filteredNote.size() > 0) {             //需要的是EntityNoteCard实体类 查询是EntityNote实体类  需要把后者转到前者
             ArrayList<EntityNoteCard> list = noteToCard(filteredNote);
