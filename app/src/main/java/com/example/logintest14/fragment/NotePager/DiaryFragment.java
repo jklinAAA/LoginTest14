@@ -4,16 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.text.Editable;            //新加的    查询
-import android.text.TextWatcher;       //新加的    查询
 import android.widget.SearchView;         //新加的    查询
-
-
 import com.example.logintest14.Adapter.NoteAdapter;
 import com.example.logintest14.Dao.NoteDao;
 import com.example.logintest14.Entity.EntityNote;
@@ -22,6 +19,7 @@ import com.example.logintest14.InitDataBase.InitDataBase;
 import com.example.logintest14.R;
 import com.example.logintest14.Util.UtilMethod;
 import com.example.logintest14.databinding.FragmentDiary2Binding;
+import com.google.android.material.materialswitch.MaterialSwitch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +28,19 @@ import java.util.List;
 public class DiaryFragment extends Fragment {
 
     FragmentDiary2Binding binding;
-    InitDataBase initDataBase;   //需要数据库的引用
+    InitDataBase initDataBase;   //需要数据库的引用-
     NoteDao noteDao;
     private String searchKeyword = "";
+    private NoteAdapter noteAdapter;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentDiary2Binding.inflate(getLayoutInflater());
         initMethod(); // 可以用接口回调？
+
+        MaterialSwitch switchLayout = binding.switchLayout;                                                //绑定开关
 
         binding.searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -60,8 +62,20 @@ public class DiaryFragment extends Fragment {
         binding.floatingActionButton.setOnClickListener(view -> {
             startActivity(new Intent(getActivity(), AddOrEditNoteActivity.class));     //上下文 +要去的地方
         });
-        return binding.getRoot();
 
+        switchLayout.setOnCheckedChangeListener((buttonView, isChecked) -> {                                 //找到onCreateView方法中的MaterialSwitch的点击事件监听器
+            if (isChecked) {
+                // 切换到网格布局
+                binding.noteList.setLayoutManager(new GridLayoutManager(getContext(), 2));
+            } else {
+                // 切换回瀑布流布局
+                binding.noteList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+            }
+        });
+
+
+
+        return binding.getRoot();
 
     }
 
@@ -77,28 +91,29 @@ public class DiaryFragment extends Fragment {
 
 
 
-
-        if (filteredNote != null && filteredNote.size() > 0) {             //需要的是EntityNoteCard实体类 查询是EntityNote实体类  需要把后者转到前者
-            ArrayList<EntityNoteCard> list = noteToCard(filteredNote);
+        ArrayList<EntityNoteCard> list = noteToCard(filteredNote);
+        if (list != null && list.size() > 0) {                              //需要的是EntityNoteCard实体类 查询是EntityNote实体类  需要把后者转到前者
             binding.noNote.setVisibility(View.GONE);
-            binding.noteAlert.setVisibility(View.VISIBLE);                                                                                    //12-5-16.45
-            NoteAdapter noteAdapter = new NoteAdapter(list, getContext(), count -> {//内部匿名接口  实现更新日记的数量
+            binding.noteAlert.setVisibility(View.VISIBLE);
+            noteAdapter = new NoteAdapter(list, getContext(), count -> {                     //内部匿名接口  实现更新日记的数量
                 if (count == 0) {
                     binding.noNote.setVisibility(View.VISIBLE);
                 }
                 binding.noteAlert.setText(getString(R.string.note_alter, count + ""));
-            });
-            binding.noteList.setAdapter(noteAdapter);         //渲染
+            }, binding.noteList, binding.gridView); // 传入RecyclerView实例
+            binding.noteList.setAdapter(noteAdapter);
             binding.noteList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             binding.noteAlert.setText(getString(R.string.note_alter, list.size() + ""));
         } else {
             binding.noNote.setVisibility(View.VISIBLE);
-            binding.noteAlert.setVisibility(View.GONE);                                                                                      //12-5-16.45
+            binding.noteAlert.setVisibility(View.GONE);                                                                                 //12-5-16.45
         }
     }
 
-
     private ArrayList<EntityNoteCard> noteToCard(List<EntityNote> list) {                          //如果没有渲染成功考虑以下是不是这里少东西了
+        if (list == null) {
+            return null;
+        }
         ArrayList<EntityNoteCard> cards = new ArrayList<>();
         for (EntityNote note : list) {                                               //到EntityNoteCard给一个无参构造            public EntityNoteCard() {}
             EntityNoteCard entityNoteCard = new EntityNoteCard();

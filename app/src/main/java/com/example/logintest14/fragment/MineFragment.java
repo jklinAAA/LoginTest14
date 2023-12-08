@@ -219,18 +219,24 @@ public class MineFragment extends Fragment {
         if (drawable instanceof BitmapDrawable) {
             bitmapDrawable = (BitmapDrawable) drawable;
             Bitmap bitmap = bitmapDrawable.getBitmap();
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
-            byte[] bytes = outputStream.toByteArray();
-            String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), bitmap, "Avatar", null);
-            avatarUri = Uri.parse(path);
+            if (bitmap != null) { // 添加空引用检查
+                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                byte[] bytes = outputStream.toByteArray();
+                String path = MediaStore.Images.Media.insertImage(getContext().getContentResolver(), bitmap, "Avatar", null);
+                avatarUri = Uri.parse(path);
+            }
         }
         // 保存头像到持久化存储
-        Bitmap bitmap = bitmapDrawable.getBitmap();                                                 //保存信息
-        String path = MediaStore.Images.Media.insertImage(
-                getContext().getContentResolver(), bitmap, "Avatar", null
-        );
-        avatarUri = Uri.parse(path);
+        if (bitmapDrawable != null) { // 添加空引用检查
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+            if (bitmap != null) { // 添加空引用检查
+                String path = MediaStore.Images.Media.insertImage(
+                        getContext().getContentResolver(), bitmap, "Avatar", null
+                );
+                avatarUri = Uri.parse(path);
+            }
+        }
         return avatarUri;
     }
 

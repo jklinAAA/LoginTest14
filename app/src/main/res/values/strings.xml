@@ -18,4 +18,22 @@
     <string name="Username">Username\n</string>
     <string name="password">Password\n</string>
     <string name="search_hint">Serch for diary\n</string>
+    <string name="change_layout">切换布局</string>
+    <string-array name="weather">
+        <item> 晴 </item>
+        <item> 多云 </item>
+        <item> 阴</item>
+        <item> 雨 </item>
+        <item> 雪 </item>
+        <item> 大风 </item>
+    </string-array>
+    <string-array name="mood">
+        <item> 快乐 </item>
+        <item> 悲伤 </item>
+        <item> 焦虑</item>
+        <item> 平静</item>
+        <item> 孤独 </item>
+        <item> 无聊 </item>
+    </string-array>
+
 </resources>

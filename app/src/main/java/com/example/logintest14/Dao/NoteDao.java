@@ -31,8 +31,7 @@ public interface NoteDao {
     @Update
     void updateNote(EntityNote note);
     // 添加的代码开始
-    @Query("SELECT * FROM t_note WHERE note_title LIKE '%' || :keyword || '%' OR note_content LIKE '%' || :keyword || '%'" +
-            "OR weather LIKE '%' || :keyword || '%'OR mood LIKE '%' || :keyword || '%'")  //搜索
+    @Query("SELECT * FROM t_note WHERE note_title LIKE '%' || :keyword || '%' OR note_content LIKE '%' || :keyword || '%' OR weather LIKE '%' || :keyword || '%' OR mood LIKE '%' || :keyword || '%'")//查询
     List<EntityNote> searchNotesByKeyword(String keyword);
     // 添加的代码结束
 
@@ -42,12 +41,6 @@ public interface NoteDao {
 
     @Query("UPDATE t_note SET mood = :mood WHERE note_id = :noteId")
     void updateMood(long noteId, String mood);
-
-//    @Query("SELECT * FROM t_note WHERE weather = :weather")             //根据天气和心情查找
-//    List<EntityNote> searchNotesByWeather(String weather);
-//
-//    @Query("SELECT * FROM t_note WHERE mood = :mood")
-//    List<EntityNote> searchNotesByMood(String mood);
 
     @Query("UPDATE t_note SET selectTime = :selectTime WHERE note_id = :noteId") //保存选择日期
     void updateSelectTime(long noteId, String selectTime);

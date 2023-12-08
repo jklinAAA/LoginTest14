@@ -73,4 +73,7 @@ dependencies {
     //chat
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
+    //圆角        item_note      <de.hdodenhof.circleimageview.CircleImageView
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
+
 }

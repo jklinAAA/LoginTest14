@@ -14,8 +14,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,8 +37,6 @@ import java.util.Date;
 public class AddOrEditNoteActivity extends AppCompatActivity {
     String selectedDate; // 声明selectedDate变量
     EditText etDate;
-    //    TextView tvDate;             //日期选择器
-//    DatePickerDialog.OnDateSetListener setListener;            //日期选择器
     ActivityAddOrEditNoteBinding binding;
     //获取实体类
     InitDataBase initDataBase;
@@ -47,6 +47,10 @@ public class AddOrEditNoteActivity extends AppCompatActivity {
     EntityNote note;
     ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     String imageUri;
+    Spinner weatherSpinner;
+    Spinner moodSpinner;
+    String selectedWeather;
+    String selectedMood;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,26 @@ public class AddOrEditNoteActivity extends AppCompatActivity {
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);                                                    //时间选择器
 
+        // 找到对应的Spinner并分配给变量
+        weatherSpinner = findViewById(R.id.weather);
+        moodSpinner = findViewById(R.id.mood);
+
+        ArrayAdapter<CharSequence> weatherAdapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.weather,
+                android.R.layout.simple_spinner_item
+        );
+        weatherAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        weatherSpinner.setAdapter(weatherAdapter);
+
+        ArrayAdapter<CharSequence> moodAdapter = ArrayAdapter.createFromResource(
+                this,
+                R.array.mood,
+                android.R.layout.simple_spinner_item
+        );
+        moodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        moodSpinner.setAdapter(moodAdapter);
+
         Intent intent = getIntent();
         if (!(intent != null && intent.getBooleanExtra("isAdd", true))) {
             isAdd = false;
@@ -72,12 +96,12 @@ public class AddOrEditNoteActivity extends AppCompatActivity {
             note = noteDao.getNoteById(noteId);
             binding.noteTitle.setText(note.getNoteTitle().length() > 0 ? note.getNoteTitle() : "");      //渲染
             binding.noteContent.setText(note.getNoteContent());
-            if (note.getNoteImageUrl() != null && !note.getNoteImageUrl().isEmpty()){
+            if (note.getNoteImageUrl() != null && !note.getNoteImageUrl().isEmpty()) {
                 imageUri = note.getNoteImageUrl();
                 Glide.with(getApplicationContext()).load(note.getNoteImageUrl()).into(binding.noteImage);//图片    into显示的位置
             }
-            binding.weather.setText(note.getWeather()); // 设置天气文本内容
-            binding.mood.setText(note.getMood()); // 设置心情文本内容
+            binding.weather.setSelection(weatherAdapter.getPosition(note.getWeather())); // 设置天气的选中项
+            binding.mood.setSelection(moodAdapter.getPosition(note.getMood())); // 设置心情的选中项
 
         } else {
             note = new EntityNote(); // 初始化note对象
@@ -99,7 +123,7 @@ public class AddOrEditNoteActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable  editable) {
+            public void afterTextChanged(Editable editable) {
                 binding.wordsCount.setText(getString(R.string.note_length, editable.toString().trim().length()));          //editable是他给的参数
             }
         });
@@ -110,25 +134,6 @@ public class AddOrEditNoteActivity extends AppCompatActivity {
         });
         binding.wordsCount.setText(getString(R.string.note_length, binding.noteContent.getText().toString().length()));
 
-//        tvDate.setOnClickListener(new View.OnClickListener() {                                                            //时间选择器
-//            @Override
-//            public void onClick(View v) {
-//                DatePickerDialog datePickerDialog =new DatePickerDialog(
-//                        AddOrEditNoteActivity.this, android.R.style.Theme_Holo_Light_Dialog_MinWidth
-//                        ,setListener,year,month,day);
-//                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//                datePickerDialog.show();
-//            }
-//        });                                                                                                               //text view的时间选择器
-//        setListener =new DatePickerDialog.OnDateSetListener() {
-//            @Override
-//            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-//                month =month+1;
-//                String date = day+"/"+month+"/"+year;
-//                tvDate.setText(date);
-//
-//            }
-//        };
 
         etDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,42 +175,30 @@ public class AddOrEditNoteActivity extends AppCompatActivity {
 
     private void saveNote() {
         if (isAdd) {
-            if (binding.noteContent.getText().toString().trim().isEmpty() || binding.weather.getText().toString().trim().isEmpty() || binding.mood.getText().toString().trim().isEmpty()) {
+            if (binding.noteContent.getText().toString().trim().isEmpty() || weatherSpinner.getSelectedItem() == null || moodSpinner.getSelectedItem() == null) {
                 //getText() 内容   toString()整理成字符串trim()去除空字符   isEmpty()判断是否为空
-                // 显示错误消息，要求填写所有必填字段
                 Toast.makeText(getApplicationContext(), "请填写所有必填字段", Toast.LENGTH_SHORT).show();
-
                 return;
             } else {
-//                noteDao.insertNote(new EntityNote(
-//                        1, // 假设noteUserId为1
-//                        binding.noteTitle.getText().toString().trim(),
-//                        binding.noteContent.getText().toString().trim(),
-//                        null,
-//                        selectedDate, // 设置创建时间为所选日期
-//                        binding.weather.getText().toString().trim(),
-//                        binding.mood.getText().toString().trim(),
-//                        selectedDate // 设置selectTime为所选日期
-//                ));
+
                 getCurrentNote();
                 noteDao.insertNote(getCurrentNote());
                 UtilMethod.showToast(getApplicationContext(), "添加成功！");
                 finish();
             }
         } else {        //编辑更新
-            if (binding.noteContent.getText().toString().trim().isEmpty() || binding.weather.getText().toString().trim().isEmpty() || binding.mood.getText().toString().trim().isEmpty()) {
+            if (binding.noteContent.getText().toString().trim().isEmpty() || weatherSpinner.getSelectedItem() == null || moodSpinner.getSelectedItem() == null) {
                 //getText() 内容   toString()整理成字符串trim()去除空字符   isEmpty()判断是否为空
-                // 显示错误消息，要求填写所有必填字段
                 Toast.makeText(getApplicationContext(), "请填写所有必填字段", Toast.LENGTH_SHORT).show();
                 return;
             } else {
                 String content = binding.noteContent.getText().toString().trim();
                 note.setNoteContent(content);
                 note.setNoteTitle(binding.noteTitle.getText().toString().trim().length() > 0 ? binding.noteTitle.getText().toString().trim() : "");
-                note.setWeather(binding.weather.getText().toString().trim()); // 更新天气字段的值
-                note.setMood(binding.mood.getText().toString().trim()); // 更新心情字段的值
+                note.setWeather(weatherSpinner.getSelectedItem().toString()); // 更新天气字段的值
+                note.setMood(moodSpinner.getSelectedItem().toString());// 更新心情字段的值
                 note.setSelectTime(selectedDate); // 设置选择日期为所选日期
-                note.setNoteImageUrl(imageUri == null ? null:imageUri);
+                note.setNoteImageUrl(imageUri == null ? null : imageUri);
                 noteDao.updateNote(note);
                 noteDao.updateSelectTime(note.getNoteId(), selectedDate); // 更新选择日期
                 UtilMethod.showToast(getApplicationContext(), "保存成功!");
@@ -217,14 +210,16 @@ public class AddOrEditNoteActivity extends AppCompatActivity {
     private EntityNote getCurrentNote() {
         String content = binding.noteContent.getText().toString().trim();
         String title = binding.noteTitle.getText().toString().trim();
+        selectedWeather = weatherSpinner.getSelectedItem().toString(); // 获取所选天气
+        selectedMood = moodSpinner.getSelectedItem().toString(); // 获取所选心情
         return new EntityNote(1,
                 binding.noteContent.getText().toString().trim(),
                 binding.noteTitle.getText().toString().trim(),
                 imageUri == null ? null : imageUri,
                 createTime,
-                binding.weather.getText().toString().trim(),
-                binding.mood.getText().toString().trim(),
-                selectedDate );
+                selectedWeather,
+                selectedMood,
+                selectedDate);
 
     }
 }

@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,34 +27,57 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.List;               //新增  查询
 
+
 public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
     ArrayList<EntityNoteCard> list;                                                                                  //可删
     private ArrayList<EntityNoteCard> originalList;  // 初始列表
     private ArrayList<EntityNoteCard> filteredList;  // 过滤后的列表
     private Context context; //上下文
-    private  int deletePosition;   //成员变量，删除的位置
+    private int deletePosition;   //成员变量，删除的位置
     //删除数据库里的内容 需要
     private InitDataBase initDataBase;
     private NoteDao noteDao;
     //更新日记的数量
-    private  CountListen countListen;
+    private CountListen countListen;
     private String query = ""; // 查询条件
+    private NoteItemTouchHelper itemTouchHelper;        //左滑删除
+    private RecyclerView recyclerView;
+    private GridView gridView;
+    private boolean isGrid = false;
 
 
-
-    public NoteAdapter(ArrayList<EntityNoteCard> list, Context context, CountListen countListen) {
+    public NoteAdapter(ArrayList<EntityNoteCard> list, Context context, CountListen countListen,RecyclerView recyclerView, GridView gridView){
         this.originalList = list;
         this.filteredList = new ArrayList<>(list);
         this.context = context;
         this.countListen = countListen;
         initDataBase = UtilMethod.getInstance(context); //初始化
         noteDao = initDataBase.noteDao();
+        this.recyclerView = recyclerView;
+        this.gridView = gridView;
+
+        this.recyclerView = recyclerView; // 添加这一行，将传入的RecyclerView赋值给成员变量                                          左滑删除
+        itemTouchHelper = new NoteItemTouchHelper(this); // 添加这一行，创建NoteItemTouchHelper实例
+        itemTouchHelper.attachToRecyclerView(recyclerView); // 添加这一行，将NoteItemTouchHelper与RecyclerView关联
     }
+
+
+    public void switchLayout(boolean isGrid) {
+        this.isGrid = isGrid;
+        notifyDataSetChanged();
+    }
+
+
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {  //创建一个ViewHolder 并返回   //视图绑定
-        View view = LayoutInflater.from(context).inflate(R.layout.item_note, parent, false);
+        View view;
+        if (isGrid) {
+            view = LayoutInflater.from(context).inflate(R.layout.item_note_grid, parent, false);
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.item_note, parent, false);
+        }
         return new ViewHolder(view);
     }
 
@@ -94,8 +118,33 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             });
         }
 
+
+        // 长按删除
+        holder.itemCard.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                new MaterialAlertDialogBuilder(context)
+                        .setTitle("确认删除这篇日记吗？")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                deletePosition = holder.getLayoutPosition();
+                                deleteNote();
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
+                return true;
+            }
+        });
+
     }
 
+    //左滑删除
+    public void onItemSwiped(int position) {
+        deletePosition = position;
+        deleteNote();
+    }
 
 
     private void deleteNote() {
@@ -114,7 +163,6 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-
         return filteredList.size();
     }
 
@@ -130,6 +178,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         this.query = query;
         filterNotes(); // 设置查询条件后立即进行列表过滤
     }
+
     // 新增方法：根据查询条件过滤日记列表
     private void filterNotes() {
         filteredList.clear();
@@ -176,6 +225,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             delete = itemView.findViewById(R.id.delete);
             weatherTextView = itemView.findViewById(R.id.weatherTextView);
             moodTextView = itemView.findViewById(R.id.moodTextView);
+
 
         }
     }

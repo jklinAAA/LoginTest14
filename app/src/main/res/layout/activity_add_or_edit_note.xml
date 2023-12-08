@@ -81,21 +81,34 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
 
-            <EditText
+            <Spinner
                 android:id="@+id/weather"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="天气" />
+                android:layout_weight="2"
+                android:hint="天气"
+                android:entries="@array/weather" />
+            <View
+                android:layout_width="0dp"
+                android:layout_weight="1.5"
+                android:layout_height="match_parent"/>
 
-
-            <EditText
+            <Spinner
                 android:id="@+id/mood"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="心情" />
+                android:layout_weight="2"
+                android:hint="心情"
+                android:entries="@array/mood" />
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"/>
         </LinearLayout>
 
         <View

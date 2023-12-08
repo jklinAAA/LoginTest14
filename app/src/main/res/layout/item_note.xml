@@ -32,11 +32,12 @@
                 android:orientation="horizontal"
                 android:padding="@dimen/view_margin_normal_spacing">
 
-                <ImageView
+                <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/user_avatar"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
-                    android:src="@drawable/username" />
+                    app:civ_border_color="@color/colorPrinmaryVariant"
+                    app:civ_border_width="2dp" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -49,8 +50,8 @@
                         android:id="@+id/username"
                         android:layout_width="wrap_content"
                         android:layout_height="27dp"
-                        android:textSize="@dimen/front_normal_size"
-                        android:text="@string/item_username"></TextView>
+                        android:text="@string/item_username"
+                        android:textSize="@dimen/front_normal_size"></TextView>
 
                     <TextView
                         android:id="@+id/slogan"
@@ -72,9 +73,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
+                    android:text="@string/item_time"
                     android:textColor="@color/gray"
-                    android:textSize="@dimen/front_small_size"
-                    android:text="@string/item_time"></TextView>
+                    android:textSize="@dimen/front_small_size"></TextView>
             </LinearLayout>
 
             <ImageView
@@ -88,6 +89,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
 
                 <TextView
                     android:id="@+id/weatherTextView"
@@ -112,30 +118,36 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:hint="心情" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="@dimen/view_margin_normal_spacing"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/view_margin_normal_spacing">
 
                 <TextView
                     android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="@dimen/view_margin_large_spacing"
+                    android:text="@string/item_title"
                     android:textColor="@color/black"
-                    android:text="@string/item_title"></TextView>
+                    android:textSize="@dimen/view_margin_large_spacing"></TextView>
 
                 <TextView
                     android:id="@+id/content"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/view_margin_normal_spacing"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:textColor="@color/gray"
-                    android:layout_marginTop="@dimen/view_margin_normal_spacing"
-                    android:text="@string/item_content"></TextView>
+                    android:text="@string/item_content"
+                    android:textColor="@color/gray"></TextView>
 
                 <Button
                     android:id="@+id/delete"
