@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/diary"
-        android:title="DIRAY"
-        android:icon="@drawable/note"></item>
-    <item android:id="@+id/mark"
-        android:title="CHAT"
-        android:icon="@drawable/talk"></item>
-    <item android:id="@+id/mine"
-    android:title="PROFILE"
-    android:icon="@drawable/mine"></item>
+    <item
+        android:id="@+id/diary"
+        android:enabled="true"
+        android:icon="@drawable/note"
+        android:title="DIRAY"></item>
+    <item
+        android:id="@+id/mark"
+        android:enabled="true"
+        android:icon="@drawable/talk"
+        android:title="CHAT"></item>
+    <item
+        android:id="@+id/mine"
+        android:enabled="true"
+        android:icon="@drawable/mine"
+        android:title="PROFILE"></item>
 </menu>

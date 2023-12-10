@@ -57,7 +57,7 @@ public  class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String username = et_username.getText().toString();
                 String password = et_password.getText().toString();
-                                                                                                                  // 输入验证逻辑开始
+                // 输入验证逻辑开始
                 if (!isAlphaNumeric(username)) {
                     Toast.makeText(LoginActivity.this, "用户名只能包含数字和字母", Toast.LENGTH_SHORT).show();
                     return;
@@ -66,7 +66,7 @@ public  class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "密码只能包含数字和字母", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                                                                                                                  // 输入验证逻辑结束
+                // 输入验证逻辑结束
                 if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
                     Toast.makeText(LoginActivity.this, "请输入用户名或密码", Toast.LENGTH_SHORT).show();
                 } else {
@@ -80,7 +80,7 @@ public  class LoginActivity extends AppCompatActivity {
                             edit.putBoolean("is_login", is_login);
                             edit.putString("username", username);
                             edit.putString("password", password);
-                            edit.commit();      //提交
+                            edit.apply();      //提交
                             //登录成功 跳转
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);

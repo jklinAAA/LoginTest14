@@ -72,13 +72,9 @@ public class DiaryFragment extends Fragment {
                 binding.noteList.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
             }
         });
-
-
-
         return binding.getRoot();
 
     }
-
     private void initList() {
         List<EntityNote> localNote = getLocalNote();//查询
         List<EntityNote> filteredNote;
@@ -88,8 +84,6 @@ public class DiaryFragment extends Fragment {
         } else {
             filteredNote = localNote;  // 如果搜索关键字为空，则显示所有的笔记
         }
-
-
 
         ArrayList<EntityNoteCard> list = noteToCard(filteredNote);
         if (list != null && list.size() > 0) {                              //需要的是EntityNoteCard实体类 查询是EntityNote实体类  需要把后者转到前者

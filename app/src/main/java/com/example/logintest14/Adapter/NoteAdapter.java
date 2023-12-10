@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -95,6 +96,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             holder.content.setText(originalList.get(position).getContent());
             holder.weatherTextView.setText(originalList.get(position).getWeather());                             //  holder.weatherTextView.setText(noteCard.getWeather());
             holder.moodTextView.setText(originalList.get(position).getMood());                                   // holder.moodTextView.setText(noteCard.getMood());
+            holder.selectTime.setText(originalList.get(position).getSelectTime());
             if (originalList.get(position).getCover() == null) {
                 holder.cover.setVisibility(View.GONE);
             } else {
@@ -211,6 +213,9 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
         TextView weatherTextView;
         TextView moodTextView;
 
+        TextView selectTime;
+
+
         public ViewHolder(@NonNull View itemView) {
 
             super(itemView);
@@ -225,7 +230,7 @@ public class NoteAdapter extends RecyclerView.Adapter<NoteAdapter.ViewHolder> {
             delete = itemView.findViewById(R.id.delete);
             weatherTextView = itemView.findViewById(R.id.weatherTextView);
             moodTextView = itemView.findViewById(R.id.moodTextView);
-
+            selectTime=itemView.findViewById(R.id.tv_data);
 
         }
     }

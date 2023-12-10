@@ -3,6 +3,7 @@ package com.example.logintest14;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.TextView;
@@ -11,7 +12,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
     private TextView tvCountdown;
     private CountDownTimer countDownTimer;
-    private long timeLeftInMillis = 4000; // 设置倒计时时长，单位为毫秒
+    private long timeLeftInMillis = 1500; // 设置倒计时时长，单位为毫秒
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +21,7 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
         //初始化控件
         tvCountdown =findViewById(R.id.tv_countdown);
+        mSharedPreferences = getSharedPreferences("user", MODE_PRIVATE);
         startCountdown();
     }
 
@@ -33,9 +36,17 @@ public class WelcomeActivity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                //跳转到登录页面（看自己逻辑想跳转哪个页面）
-                startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
-                // 倒计时结束后的操作，例如跳转到主页面
+                // 检查是否已登录
+                boolean isLogin = mSharedPreferences.getBoolean("is_login", false);
+                if (isLogin) {
+                    // 已登录，跳转到主界面
+                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                    startActivity(intent);
+                } else {
+                    // 未登录，跳转到登录界面
+                    Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
                 finish();
             }
         }.start();

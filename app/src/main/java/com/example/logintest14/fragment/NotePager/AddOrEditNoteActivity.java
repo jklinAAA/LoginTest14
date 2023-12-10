@@ -35,8 +35,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class AddOrEditNoteActivity extends AppCompatActivity {
-    String selectedDate; // 声明selectedDate变量
-    EditText etDate;
     ActivityAddOrEditNoteBinding binding;
     //获取实体类
     InitDataBase initDataBase;
@@ -49,12 +47,12 @@ public class AddOrEditNoteActivity extends AppCompatActivity {
     String imageUri;
     Spinner weatherSpinner;
     Spinner moodSpinner;
+    EditText etDate;
     String selectedWeather;
     String selectedMood;
-
+    String selectedDate; // 声明selectedDate变量
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        selectedDate = ""; // 或者设置一个默认的初始值
 
         super.onCreate(savedInstanceState);
         binding = ActivityAddOrEditNoteBinding.inflate(getLayoutInflater());                  //binding赋值
@@ -62,16 +60,18 @@ public class AddOrEditNoteActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         initMethod();  //初始化
 
-        //tvDate = binding.tvData;                                                                 //时间选择器
-        etDate = findViewById(R.id.et_date);
+
+        etDate = binding.etDate;
         Calendar calendar = Calendar.getInstance();
         final int year = calendar.get(Calendar.YEAR);
         final int month = calendar.get(Calendar.MONTH);
         final int day = calendar.get(Calendar.DAY_OF_MONTH);                                                    //时间选择器
 
         // 找到对应的Spinner并分配给变量
-        weatherSpinner = findViewById(R.id.weather);
-        moodSpinner = findViewById(R.id.mood);
+        weatherSpinner = binding.weather;
+        moodSpinner = binding.mood;
+      //  selectedDate = etDate.getText().toString().trim();                                        //保存选中的日期               保存不成功就试试把这个注释放出来
+
 
         ArrayAdapter<CharSequence> weatherAdapter = ArrayAdapter.createFromResource(
                 this,
@@ -96,12 +96,16 @@ public class AddOrEditNoteActivity extends AppCompatActivity {
             note = noteDao.getNoteById(noteId);
             binding.noteTitle.setText(note.getNoteTitle().length() > 0 ? note.getNoteTitle() : "");      //渲染
             binding.noteContent.setText(note.getNoteContent());
+
             if (note.getNoteImageUrl() != null && !note.getNoteImageUrl().isEmpty()) {
                 imageUri = note.getNoteImageUrl();
                 Glide.with(getApplicationContext()).load(note.getNoteImageUrl()).into(binding.noteImage);//图片    into显示的位置
             }
             binding.weather.setSelection(weatherAdapter.getPosition(note.getWeather())); // 设置天气的选中项
             binding.mood.setSelection(moodAdapter.getPosition(note.getMood())); // 设置心情的选中项
+            selectedDate = note.getSelectTime();
+            // 将选中的日期设置到日期选择器的EditText中
+            etDate.setText(selectedDate);
 
         } else {
             note = new EntityNote(); // 初始化note对象
@@ -208,13 +212,14 @@ public class AddOrEditNoteActivity extends AppCompatActivity {
     }
 
     private EntityNote getCurrentNote() {
-        String content = binding.noteContent.getText().toString().trim();
         String title = binding.noteTitle.getText().toString().trim();
+        String content = binding.noteContent.getText().toString().trim();
         selectedWeather = weatherSpinner.getSelectedItem().toString(); // 获取所选天气
         selectedMood = moodSpinner.getSelectedItem().toString(); // 获取所选心情
+        selectedDate = binding.etDate.getText().toString().trim(); // 获取所选日期
         return new EntityNote(1,
-                binding.noteContent.getText().toString().trim(),
                 binding.noteTitle.getText().toString().trim(),
+                binding.noteContent.getText().toString().trim(),
                 imageUri == null ? null : imageUri,
                 createTime,
                 selectedWeather,
